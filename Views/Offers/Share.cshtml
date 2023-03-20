@@ -1,0 +1,65 @@
+﻿@model JobBoard.ViewModels.Offers.ShareVM
+@{
+    ViewData["title"] = "Share Offer";
+}
+
+<div class="grid">
+    <div class="row">
+        <div class="col-1 b">Offer</div>
+        <div class="col-2">@Model.Offer.Title</div>
+    </div>
+
+    <div class="row">
+        <div class="col-1 b">Description</div>
+        <div class="col-3">@Html.Raw(Model.Offer.Description)</div>
+    </div>
+
+    <hr />
+
+    <div class="row mt-2">
+        <form action="/Offers/CreateShare" method="post">
+            <input type="hidden" name="OfferId" value="@Model.Offer.Id" />
+            @if (Model.Users.Count <= 0)
+            {
+                <p>No users to share with.</p>
+            }
+            else
+            {
+                <span>Share with: </span>
+                @Html.DropDownListFor(
+                      m => m.UserIds,
+                      Model.Users.Select(u => new SelectListItem()
+                      {
+                          Text = u.Username,
+                          Value = u.Id.ToString()
+                      }))
+                <input type="submit" value="Share" />
+            }
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col">Shared with:</div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var share in Model.Shares)
+            {
+                <tr>
+                    <td>@share.User.Username</td>
+                    <td>@share.User.FirstName</td>
+                    <td>@share.User.LastName</td>
+                    <td><a href="/Offers/RevokeShare?id=@share.Id">Revoke</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
