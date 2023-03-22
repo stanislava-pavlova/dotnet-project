@@ -1,1 +1,2 @@
-wwwroot/* linguist-vendored
+*.scss linguist-detectable=false
+*.html linguist-detectable=false
